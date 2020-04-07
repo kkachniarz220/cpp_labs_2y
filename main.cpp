@@ -91,6 +91,14 @@ void copyNumberBehindIfIsEven(node *&H) {
 
 }
 
+node *last(node *H) {
+    node *p = H;
+    while (p->next != NULL) {
+        p = p->next;
+    }
+    return p;
+}
+
 
 bool isEmpty(node *H) {
     if (H != NULL) {
@@ -108,55 +116,67 @@ void top(node *H) {
     }
 }
 
+bool include(node *&H, int searchValue) {
+    node *p = H;
+
+    while (p->next != NULL && p->val != searchValue) {
+        p = p->next;
+    }
+    if (p->next == NULL && p->val != searchValue) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
 void spacer(string value = "=========") {
     cout << "==========" << value << "==========";
     cout << endl;
 }
 
-void push() {}
-
-void pop() {}
-
 void removeBetween(node *&H, int firstPointValue, int secondPointValue) {
     node *p = H;
-    node *firstElement = H;
-    node *secondElement = H;
+    node *firstBoundaryNode = H;
+    node *secondBoundaryNode = H;
     node *p2 = H;
     int countOfDeletedNodes = 0;
 
+    if (isEmpty(H)) {
+        cout << "Pusta lista, brak elementow do usuniecia" << endl << "Koncze dzialanie funkcji" << endl;
+        return;
+    }
+
+    if (!include(H, firstPointValue)) {
+        cout << "Nie znaleziono pierwszego elementu" << endl << "Koncze dzialanie funkcji" << endl;
+        return;
+    }
     while (p->next != NULL && p->val != firstPointValue) {
         p = p->next;
     }
-    if (p->next == NULL && p->val != firstPointValue) {
-        cout << "Nie znaleziono pierwszego elementu" << endl << "Koncze dzialanie funkcji" << endl;
-        return;
-    } else {
-        firstElement = p;
-    }
+    firstBoundaryNode = p;
 
+    if (!include(H, secondPointValue)) {
+        cout << "Nie znaleziono drugiego elementu" << endl << "Koncze dzialanie funkcji" << endl;
+        return;
+    }
     p = H;
     while (p->next != NULL && p->val != secondPointValue) {
         p = p->next;
     }
-    if (p->next == NULL && p->val != secondPointValue) {
-        cout << "Nie znaleziono drugiego elementu" << endl << "Koncze dzialanie funkcji" << endl;
-        return;
-    } else {
-        secondElement = p;
-    }
+    secondBoundaryNode = p;
 
-    p = firstElement;
-    while (p->next != NULL && p->next != secondElement) {
+    p = firstBoundaryNode;
+    while (p->next != NULL && p->next != secondBoundaryNode) {
         p = p->next;
     }
     if (p->next == NULL) {
-        p = secondElement;
-        if(p->next == firstElement) {
+        p = secondBoundaryNode;
+        if (p->next == firstBoundaryNode) {
             cout << "Brak elementow pomiedzy, nic nie usunieto" << endl;
             return;
         }
         p = p->next;
-        while (p->next != NULL && p->next != firstElement) {
+        while (p->next != NULL && p->next != firstBoundaryNode) {
             p2 = p;
             p = p->next;
             delete p2;
@@ -164,15 +184,15 @@ void removeBetween(node *&H, int firstPointValue, int secondPointValue) {
         }
         delete p;
         countOfDeletedNodes++;
-        secondElement->next = firstElement;
+        secondBoundaryNode->next = firstBoundaryNode;
     } else {
-        p = firstElement;
-        if(p->next == secondElement) {
+        p = firstBoundaryNode;
+        if (p->next == secondBoundaryNode) {
             cout << "Brak elementow pomiedzy, nic nie usunieto" << endl;
             return;
         }
         p = p->next;
-        while (p->next != NULL && p->next != secondElement) {
+        while (p->next != NULL && p->next != secondBoundaryNode) {
             p2 = p;
             p = p->next;
             delete p2;
@@ -180,25 +200,117 @@ void removeBetween(node *&H, int firstPointValue, int secondPointValue) {
         }
         delete p;
         countOfDeletedNodes++;
-        firstElement->next = secondElement;
+        firstBoundaryNode->next = secondBoundaryNode;
     }
 
     cout << "Liczba usunietych elementow z listy: " << countOfDeletedNodes << endl;
+}
+
+void moveNodesThatAreBetween(node *&H, int firstPointValue, int secondPointValue) {
+    node *p = H;
+    node *firstBoundaryNode = NULL;
+    node *secondBoundaryNode = NULL;
+
+    if (isEmpty(H)) {
+        cout << "Pusta lista, brak elementow do przeniesienia" << endl << "Koncze dzialanie funkcji" << endl;
+        return;
+    }
+
+    node *lastNode = last(H);
+
+    if (!include(H, firstPointValue)) {
+        cout << "Nie znaleziono pierwszego elementu" << endl << "Koncze dzialanie funkcji" << endl;
+        return;
+    }
+    while (p->next != NULL && p->val != firstPointValue) {
+        p = p->next;
+    }
+    firstBoundaryNode = p;
+
+    if (!include(H, secondPointValue)) {
+        cout << "Nie znaleziono drugiego elementu" << endl << "Koncze dzialanie funkcji" << endl;
+        return;
+    }
+    p = H;
+    while (p->next != NULL && p->val != secondPointValue) {
+        p = p->next;
+    }
+    secondBoundaryNode = p;
+
+    p = firstBoundaryNode;
+    while (p->next != NULL && p->next != secondBoundaryNode) {
+        p = p->next;
+    }
+    if (p->next == NULL) {
+        p = secondBoundaryNode;
+        if (p->next == firstBoundaryNode) {
+            cout << "Brak elementow pomiedzy, nic nie przeniesiono" << endl;
+            return;
+        }
+        p = p->next;
+        lastNode->next = p;
+        while (p->next != NULL && p->next != firstBoundaryNode) {
+            p = p->next;
+        }
+        p->next = NULL;
+        secondBoundaryNode->next = firstBoundaryNode;
+    } else {
+        p = firstBoundaryNode;
+        if (p->next == secondBoundaryNode) {
+            cout << "Brak elementow pomiedzy, nic nie przeniesiono" << endl;
+            return;
+        }
+        p = p->next;
+        lastNode->next = p;
+        while (p->next != NULL && p->next != secondBoundaryNode) {
+            p = p->next;
+        }
+        p->next = NULL;
+        firstBoundaryNode->next = secondBoundaryNode;
+    }
+}
+
+void copyListAtTheEndInReverseOrder(node *&H) {
+    if (isEmpty(H)) {
+        cout << "Pusta lista, brak elementow do skopiowania, koncze dzialanie funkcji" << endl;
+        return;
+    }
+    node *p = H;
+    node *lastCopiedNode = NULL;
+    node *lastNode = last(H);
+    node *latestCopy = new node;
+    latestCopy->val = lastNode->val;
+    lastNode->next = latestCopy;
+    lastCopiedNode = lastNode;
+    while (lastCopiedNode != H) {
+        p=H;
+        while (p->next != lastCopiedNode) {
+            p = p->next;
+        }
+        latestCopy->next = new node;
+        latestCopy = latestCopy->next;
+        latestCopy->val = p->val;
+        lastCopiedNode = p;
+    }
+
 
 }
 
 int main() {
     node *H = NULL;
-    add(H, 12);
-    add(H, 17);
-    add(H, 18);
-    add(H, 20);
-    add(H, 22);
-    add(H, 24);
-    add(H, 2);
-    add(H, 4);
-    add(H, 6);
-    cout << "Lista zaraz po stworzeniu: ";
+//    int list[0] = {};
+//    int list[1] = {5};
+    int list[2] = {8, 5};
+//    int list[10] = {22, 12, 8, 5, 18, 5, 8, 6, 3, 5};
+//    int list[3] = {25, 8, 55};
+//    int list[3] = {25, 55, 8};
+//    int list[5] = {25, 75, 25, 55, 8};
+
+    for (auto &i : list) {
+        add(H, i);
+    }
+
+    cout << "Lista zaraz po utworzeniu: ";
     show(H);
 
 //    delEverySecondElement(H); // usuwanie co drugiego elementu
@@ -206,11 +318,25 @@ int main() {
 
 //    copyNumberBehindIfIsEven(H); // kopiuj wartosc za jezeli jest parzysta
 //    show(H);
+
+//    cout << endl;
+//    spacer("Operacja usuwania pomiedzy x oraz y");
+//    removeBetween(H, 5, 22); // usuwnie wartości pomiedzy wprowadzonymi argumentami x i y
+//    show(H);
+//    spacer();
+
+//    cout << endl;
+//    spacer("Operacja przeniesienia elementow pomiedzy x oraz y na koniec listy");
+//    moveNodesThatAreBetween(H, 18, -5); // przeniesienie wartosci pomiedzy argumentami x i y na koniec listy
+//    show(H);
+//    spacer();
+
     cout << endl;
-    spacer("Operacja usuwania pomiedzy x oraz y");
-    removeBetween(H, 6, 12);
+    spacer("Operacja skopiowania listy na koniec w odwrotnej kolejnosci");
+    copyListAtTheEndInReverseOrder(H);
     show(H);
     spacer();
+
 
     return 0;
 }

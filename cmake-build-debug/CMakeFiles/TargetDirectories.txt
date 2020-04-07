@@ -1,0 +1,3 @@
+/home/kkachniarz/Projects/cpp/cpp_labs_2y/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/kkachniarz/Projects/cpp/cpp_labs_2y/cmake-build-debug/CMakeFiles/cpp_labs_2y.dir
+/home/kkachniarz/Projects/cpp/cpp_labs_2y/cmake-build-debug/CMakeFiles/edit_cache.dir
