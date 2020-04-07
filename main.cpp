@@ -332,25 +332,49 @@ void moveToTopMaximalElement(node *&H) {
     while(p->next != maximalElement) {
         p = p->next;
     }
-
     p->next = maximalElement->next;
     p = H;
     H = maximalElement;
     maximalElement->next = p;
+}
 
+void swapFirstAndLast(node *&H) {
+    if(isEmpty(H)) {
+        cout << "Pusta lista, koncze dzialanie funkcji" << endl;
+        return;
+    }
+
+    if(size(H) < 2) {
+        cout << "Lista posiada tylko jeden element- niemożliwa zamiana" << endl;
+        return;
+    }
+
+    node *firstNode = H;
+    node *lastNode = last(H);
+    node *p = H;
+    node *p2 = NULL;
+
+    while(p->next != lastNode) {
+        p = p->next;
+    }
+    p->next = firstNode;
+    p2 = firstNode->next;
+    firstNode->next = NULL;
+    lastNode->next = p2;
+    H = lastNode;
 }
 
 int main() {
     node *H = NULL;
-//    int list[0] = {};
+    int list[0] = {};
 //    int list[1] = {10};
 //    int list[2] = {8, 5};
 //    int list[10] = {22, 12, 8, 5, 18, 5, 8, 6, 3, 5};
-    int list[3] = {25, 8, 55};
+//    int list[3] = {25, 8, 55};
 //    int list[3] = {25, 55, 8};
 //    int list[5] = {25, 75, 25, 55, 8};
 
-    for (auto &i : list) {
+    for (int &i : list) {
         add(H, i);
     }
 
@@ -387,12 +411,17 @@ int main() {
 //    show(H);
 //    spacer();
 
+//    cout << endl;
+//    spacer("Operacja przeniesienia najwiekszego elementu na początek listy");
+//    moveToTopMaximalElement(H);
+//    show(H);
+//    spacer();
+
     cout << endl;
-    spacer("Operacja przeniesienia najwiekszego elementu na początek listy");
-    moveToTopMaximalElement(H);
+    spacer("Operacja zamiany pierwszego elementu z ostatnim");
+    swapFirstAndLast(H);
     show(H);
     spacer();
-
 
     return 0;
 }
