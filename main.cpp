@@ -1,3 +1,11 @@
+/* Kachniarz Krzysztof
+ * Wydział Inżynierii Metali i Informatyki Przemysłowej
+ * Informatyka Stosowana
+ * Grupa 1
+ * Nr. albumu: 307668
+ * Algorytmy i Struktury danych
+ * */
+
 #include <iostream>
 #include <string>
 
