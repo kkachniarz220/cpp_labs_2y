@@ -34,6 +34,44 @@ void show(node *H) {
     cout << "NULL" << endl;
 }
 
+node *last(node *H) {
+    node *p = H;
+    while (p->next != NULL) {
+        p = p->next;
+    }
+    return p;
+}
+
+
+bool isEmpty(node *H) {
+    if (H != NULL) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+void top(node *H) {
+    if (H != NULL) {
+        cout << H->val << endl;
+    } else {
+        cout << "empty";
+    }
+}
+
+bool include(node *&H, int searchValue) {
+    node *p = H;
+
+    while (p->next != NULL && p->val != searchValue) {
+        p = p->next;
+    }
+    if (p->next == NULL && p->val != searchValue) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
 void delTop(node *&H) {
     if (H != NULL) {
         node *p = H;
@@ -74,9 +112,13 @@ void delEverySecondElement(node *&H) {
 }
 
 void copyNumberBehindIfIsEven(node *&H) {
+    if(isEmpty(H)) {
+        cout << "Pusta lista, brak elementow do skopiowania" << endl << "Koncze dzialanie funkcji" << endl;
+        return;
+    }
     node *p = H;
     node *p2 = H;
-    while (p != NULL && p->next != NULL) {
+    while (p->next != NULL) {
         if (p->val % 2 == 0) {
             p2 = p->next;
             node *p3 = new node;
@@ -84,49 +126,21 @@ void copyNumberBehindIfIsEven(node *&H) {
             p3->next = p2;
             p->next = p3;
             p = p->next->next;
+            cout << p->val;
         } else {
             p = p->next;
         }
     }
-
-}
-
-node *last(node *H) {
-    node *p = H;
-    while (p->next != NULL) {
-        p = p->next;
+    if(p->next == NULL) {
+        if(p->val % 2 == 0) {
+            p2 = new node;
+            p2->val = p->val;
+            p->next = NULL;
+            p->next = p2;
+            return;
+        }
     }
-    return p;
-}
 
-
-bool isEmpty(node *H) {
-    if (H != NULL) {
-        return 0;
-    } else {
-        return 1;
-    }
-}
-
-void top(node *H) {
-    if (H != NULL) {
-        cout << H->val << endl;
-    } else {
-        cout << "empty";
-    }
-}
-
-bool include(node *&H, int searchValue) {
-    node *p = H;
-
-    while (p->next != NULL && p->val != searchValue) {
-        p = p->next;
-    }
-    if (p->next == NULL && p->val != searchValue) {
-        return false;
-    } else {
-        return true;
-    }
 }
 
 void spacer(string value = "=========") {
@@ -292,17 +306,47 @@ void copyListAtTheEndInReverseOrder(node *&H) {
         latestCopy->val = p->val;
         lastCopiedNode = p;
     }
+}
 
+void moveToTopMaximalElement(node *&H) {
+    if(isEmpty(H)) {
+        cout << "Pusta lista, koncze dzialanie funkcji" << endl;
+        return;
+    }
+    node *maximalElement = H;
+    node *p = H;
+    node *p2 = NULL;
+
+    while(p->next != NULL) {
+        p = p->next;
+        if(p->val > maximalElement->val) {
+            maximalElement = p;
+        }
+    }
+
+    if(maximalElement == H) {
+        return;
+    }
+
+    p=H;
+    while(p->next != maximalElement) {
+        p = p->next;
+    }
+
+    p->next = maximalElement->next;
+    p = H;
+    H = maximalElement;
+    maximalElement->next = p;
 
 }
 
 int main() {
     node *H = NULL;
 //    int list[0] = {};
-//    int list[1] = {5};
-    int list[2] = {8, 5};
+//    int list[1] = {10};
+//    int list[2] = {8, 5};
 //    int list[10] = {22, 12, 8, 5, 18, 5, 8, 6, 3, 5};
-//    int list[3] = {25, 8, 55};
+    int list[3] = {25, 8, 55};
 //    int list[3] = {25, 55, 8};
 //    int list[5] = {25, 75, 25, 55, 8};
 
@@ -313,27 +357,39 @@ int main() {
     cout << "Lista zaraz po utworzeniu: ";
     show(H);
 
+//    cout << endl;
+//    spacer("Usuwanie co drugiego elementu");
 //    delEverySecondElement(H); // usuwanie co drugiego elementu
 //    show(H);
+//    spacer();
 
+//    cout << endl;
+//    spacer("Operacja kopiowania elementu za jeżeli jest parzysty");
 //    copyNumberBehindIfIsEven(H); // kopiuj wartosc za jezeli jest parzysta
 //    show(H);
+//    spacer();
 
 //    cout << endl;
 //    spacer("Operacja usuwania pomiedzy x oraz y");
-//    removeBetween(H, 5, 22); // usuwnie wartości pomiedzy wprowadzonymi argumentami x i y
+//    removeBetween(H, 5, 22);
 //    show(H);
 //    spacer();
 
 //    cout << endl;
 //    spacer("Operacja przeniesienia elementow pomiedzy x oraz y na koniec listy");
-//    moveNodesThatAreBetween(H, 18, -5); // przeniesienie wartosci pomiedzy argumentami x i y na koniec listy
+//    moveNodesThatAreBetween(H, 18, -5);
+//    show(H);
+//    spacer();
+
+//    cout << endl;
+//    spacer("Operacja skopiowania listy na koniec w odwrotnej kolejnosci");
+//    copyListAtTheEndInReverseOrder(H);
 //    show(H);
 //    spacer();
 
     cout << endl;
-    spacer("Operacja skopiowania listy na koniec w odwrotnej kolejnosci");
-    copyListAtTheEndInReverseOrder(H);
+    spacer("Operacja przeniesienia najwiekszego elementu na początek listy");
+    moveToTopMaximalElement(H);
     show(H);
     spacer();
 
