@@ -1,0 +1,136 @@
+#include <iostream>
+
+using namespace std;
+
+struct node {
+    int value;
+    node *next;
+
+    node(int value, node *next) {
+        this->value = value;
+        this->next = next;
+    }
+};
+
+void add(node *&H, int value) {
+    node *newNode = new node(value, H);
+    H = newNode;
+}
+
+void show(node *&H) {
+    node *p = H;
+    cout << "HEAD->";
+    while (p != NULL) {
+        cout << p->value << "->";
+        p = p->next;
+    }
+    cout << "NULL" << endl;
+}
+
+bool includes(node *&H, int value) {
+    if (H == NULL) return false;
+
+    node *p = H;
+
+    while (p != NULL) {
+        if (p->value == value) {
+            return true;
+        }
+        p = p->next;
+    }
+}
+
+int size(node *&H) {
+    node *p = H;
+    int count = 0;
+    while(p != NULL) {
+        p = p->next;
+        count++;
+    }
+    return count;
+}
+
+void removeAllValues(node *&H, int valueToRemove) {
+    if (!includes(H, valueToRemove)) {
+        cout << "Lista nie zawiera wprowadzonej wartosci" << endl;
+        return;
+    }
+
+    node *p = H;
+
+    while (p != NULL) {
+        if (p->value == valueToRemove) {
+            if (p == H) {
+                H = H->next;
+                delete p;
+                p = H;
+            } else {
+                node *p2 = H;
+                while (p2->next != p) {
+                    p2 = p2->next;
+                }
+                p2->next = p->next;
+                delete p;
+                p = H;
+            }
+        } else {
+            p = p->next;
+        }
+    }
+}
+
+
+void sort(node *&H) {
+    node *p = H;
+    node *beforeMaxElement = H;
+    node *firstMovedElement = NULL;
+    node *maxElement = H;
+    int listSize = size(H);
+
+    for(int i = 0; i < listSize; i++) {
+        while (p != NULL) {
+            if(p->value >= maxElement->value) {
+                maxElement = p;
+            }
+            p = p->next;
+        }
+        while (beforeMaxElement->next != maxElement) beforeMaxElement = beforeMaxElement->next;
+        beforeMaxElement->next = maxElement->next;
+        if(firstMovedElement == NULL) firstMovedElement = maxElement;
+
+        p = H;
+        H = maxElement;
+        H->next = p;
+        beforeMaxElement = H;
+        
+        p = firstMovedElement->next;
+        maxElement = p;
+    }
+
+}
+
+int main() {
+    node *list = NULL;
+
+//    int listValues[0] = {};ope
+//    int listValues[1] = {10};
+//    int listValues[2] = {8, 5};
+//    int listValues[11] = {2, 22, 12, 8, 18, 8, 6, 3, 1, 2, 100};
+//    int listValues[3] = {25, 8, 55};
+//    int listValues[3] = {25, 55, 8};
+    int listValues[7] = {2, 4, 55, 24, 63, 12, 31};
+
+    for (int &i : listValues) {
+        add(list, i);
+    }
+
+//    add(list, 3);
+//    add(list, 4);
+//    add(list, 5);
+
+    show(list);
+    sort(list);
+    show(list);
+
+    return 0;
+}
